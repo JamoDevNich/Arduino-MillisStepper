@@ -97,41 +97,46 @@ class MillisStepper
 
 
   public: void doRun() {
-    bool accelerationNecessary = this->accelerationEnabled && (this->motorRPMCurrent != this->motorRPMTarget);
+    if (this->motorActive) {
+      bool accelerationNecessary = this->accelerationEnabled && (this->motorRPMCurrent != this->motorRPMTarget);
     
-    if (!accelerationNecessary && (this->motorRPMCurrent == 0 || !this->motorActive)) {
-      if (this->motorMagnetsStillOn) {
-        this->setOutputs(LOW, LOW, LOW, LOW);
-        this->motorMagnetsStillOn = false;
-      }
-    } else {
-      this->motorMagnetsStillOn = true;
-
-      if (accelerationNecessary) {
-        unsigned long waitingTime = millis() - this->lastAcceleration;
-        unsigned int rpm = this->motorRPMCurrent;
-
-        if (waitingTime > 20) {
-          if (this->motorRPMTarget < this->motorRPMCurrent) {
-            rpm -= 1;
-          } else {
-            rpm += 1;
+      if (!accelerationNecessary && (this->motorRPMCurrent == 0 || !this->motorActive)) {
+        if (this->motorMagnetsStillOn) {
+          this->setOutputs(LOW, LOW, LOW, LOW);
+          this->motorMagnetsStillOn = false;
+        }
+      } else {
+        this->motorMagnetsStillOn = true;
+  
+        if (accelerationNecessary) {
+          unsigned long waitingTime = millis() - this->lastAcceleration;
+          unsigned int rpm = this->motorRPMCurrent;
+  
+          if (waitingTime > 20) {
+            if (this->motorRPMTarget < this->motorRPMCurrent) {
+              rpm -= 1;
+            } else {
+              rpm += 1;
+            }
+  
+            this->accelerationEnabled = false;
+            this->setRPM(rpm);
+            this->accelerationEnabled = true;
+  
+            this->lastAcceleration = millis();
           }
-
-          this->accelerationEnabled = false;
-          this->setRPM(rpm);
-          this->accelerationEnabled = true;
-
-          this->lastAcceleration = millis();
+        }
+        
+        unsigned long waitingTime = micros() - this->lastRun;
+  
+        if (waitingTime > this->stepInterval) {
+          this->doStep();
+          this->lastRun = micros();
         }
       }
-      
-      unsigned long waitingTime = micros() - this->lastRun;
-
-      if (waitingTime > this->stepInterval) {
-        this->doStep();
-        this->lastRun = micros();
-      }
+    } else if (this->motorMagnetsStillOn) {
+      this->setOutputs(LOW, LOW, LOW, LOW);
+      this->motorMagnetsStillOn = false;
     }
   }
 
