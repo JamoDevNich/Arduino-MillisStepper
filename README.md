@@ -7,7 +7,7 @@ A non-blocking controller for running multiple L298N/L9110S dual h-bridge driver
 3. In the setup, set your motor's full steps `motor1.setFullRevSteps(int)`
 4. Enable the motor using `motor1.setActive(true)`
 5. Set the speed using `motor1.setRPM(int)`
-6. To run the motor, place `motor1.doRun()` in the loop.
+6. To run the motor, place `motor1.doRun()` in the loop
 
 ## Features
 - Acceleration and Deceleration
@@ -18,5 +18,5 @@ A non-blocking controller for running multiple L298N/L9110S dual h-bridge driver
 - Tested on a MEGA 2650 with 5 stepper motors
 - Individual steps cannot be done
 - Acceleration and deceleration is enabled by default - to bypass this feature, set the motor speed then enable the motor.
-- Maxmimum motor speed is limited by your arduino's operating speed
+- Maximum motor speed is limited by your arduino's operating speed
 
