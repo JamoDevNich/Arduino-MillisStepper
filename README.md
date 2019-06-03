@@ -15,8 +15,8 @@ A non-blocking controller for running multiple L298N/L9110S dual h-bridge driver
 
 ## Please Note
 - This implementation does not use interrupts (yet), so motors may operate louder and warmer than usual.
-- Tested on a MEGA 2650 with 5 stepper motors
-- Individual steps cannot be done
+- Tested on a MEGA 2560 with 5 stepper motors
+- Individual steps are not supported
 - Acceleration and deceleration is enabled by default - to bypass this feature, set the motor speed then enable the motor.
 - Maximum motor speed is limited by your arduino's operating speed
 
